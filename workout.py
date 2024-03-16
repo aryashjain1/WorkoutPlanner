@@ -1,17 +1,27 @@
+import random
 import requests
 from bs4 import BeautifulSoup
 
-"""r = requests.get('https://www.geeksforgeeks.org/python-programming-language/') 
-  
-# Parsing the HTML 
-soup = BeautifulSoup(r.content, 'html.parser') 
-  
-s = soup.find('div', class_='entry-content') 
-print(type(s))
-lines = s.find_all('p') 
-  
-for line in lines: 
-    print(line.text)"""
+def getRandom(src, n):
+    dst = []
+    visited = set()
+    i = 0
+    while i < n:
+        curr = random.choice(src)
+        if curr not in visited:
+            visited.add(curr)
+            dst.append(curr)
+            i += 1
+    return dst
+
+def printAllExercises(part):
+    for line in part:
+        print(line.text)
+
+def printAllArmExercises(part):
+    for line in part:
+        print(line)
+
 
 # Making a GET request 
 r = requests.get('https://www.menshealth.com/fitness/a19547186/best-chest-exercises/') 
@@ -25,63 +35,111 @@ chest = c.find_all('h2')
 chest = chest[5:-2] #removing irrelevant titles
 
 print("All chest workouts:")
-for line in chest:
-    print(line.text)
+printAllExercises(chest)
 print()
 
-r2 = requests.get('https://www.menshealth.com/fitness/a29459907/best-leg-exercises/')
+r = requests.get('https://www.menshealth.com/fitness/a29459907/best-leg-exercises/')
 
-soup2 = BeautifulSoup(r2.content, 'html.parser')
+soup = BeautifulSoup(r.content, 'html.parser')
 
-l = soup2.find('div', class_ = 'article-body-content article-body standard-body-content css-yqyv4u ewisyje7')
+l = soup.find('div', class_ = 'article-body-content article-body standard-body-content css-yqyv4u ewisyje7')
 
 legs = l.find_all('h2')
 legs = legs[4:]
 
 print("All leg workouts:")
-for line in legs:
-    print(line.text)
+printAllExercises(legs)
 print()
 
-r3 = requests.get('https://www.menshealth.com/fitness/a19545838/10-best-back-exercises/')
+r = requests.get('https://www.menshealth.com/fitness/a19545838/10-best-back-exercises/')
 
-soup3 = BeautifulSoup(r3.content, 'html.parser')
+soup = BeautifulSoup(r.content, 'html.parser')
 
-b = soup3.find('div', class_ = 'article-body-content article-body standard-body-content css-yqyv4u ewisyje7')
+b = soup.find('div', class_ = 'article-body-content article-body standard-body-content css-yqyv4u ewisyje7')
 
 back = b.find_all('h2')
 back = back[9:-6]
 
 print("All back workouts:")
-for line in back:
-    print(line.text)
+printAllExercises(back)
 print()
 
-r4 = requests.get('https://www.menshealth.com/uk/building-muscle/a754655/16-best-exercises-for-bigger-arms/')
+r = requests.get('https://www.menshealth.com/uk/building-muscle/a754655/16-best-exercises-for-bigger-arms/')
 
-soup4 = BeautifulSoup(r4.content, 'html.parser')
+soup = BeautifulSoup(r.content, 'html.parser')
 
-a = soup4.find('div', class_ = 'article-body-content article-body standard-body-content css-yqyv4u ewisyje7')
+a = soup.find('div', class_ = 'article-body-content article-body standard-body-content css-yqyv4u ewisyje7')
 
-arms = a.find_all('h2')
-arms = arms[4:-5]
+arms_or = a.find_all('h2')
+arms_or = arms_or[4:]
+arms = [line.text for line in arms_or]
+for i in range(len(arms)): # removing non alphabetical characters
+    arms[i] = arms[i].lstrip("0123456789")
+    arms[i] = arms[i].lstrip(".")
+    arms[i] = arms[i].strip()
 biceps = arms[:11]
 triceps = arms[12:23]
-forearms = arms[24:27]
+forearms = arms[24:26]
 
 print("All arms workouts: ")
 print()
 print("Biceps:")
-for line in biceps:
-    print(line.text)
+printAllArmExercises(biceps)
 print()
 
 print("Triceps:")
-for line in triceps:
-    print(line.text)
+printAllArmExercises(triceps)
 print()
 
 print("Forearms:")
-for line in forearms:
+printAllArmExercises(forearms)
+print()
+
+num_chest = 1
+num_chest_upper = 2
+num_back = 4
+num_quads = 3
+num_hamstrings = 3
+num_biceps = 2
+num_triceps = 2
+num_forearms = 1
+
+w_chest = getRandom(chest, num_chest)
+w_upper_chest = getRandom(chest, num_chest_upper)
+w_back = getRandom(back, num_back)
+w_quads = getRandom(legs, num_quads)
+w_hamstrings = getRandom(legs, num_hamstrings)
+w_biceps= getRandom(biceps, num_biceps)
+w_triceps = getRandom(triceps, num_triceps)
+w_forearms = getRandom(forearms, num_forearms)
+
+print("Workout split for the week: ")
+print("Chest: ")
+for line in w_chest:
+    print(line.text)
+print("Upper Chest:")
+for line in w_upper_chest:
     print(line.text)
 print()
+print("Back:")
+for line in w_back:
+    print(line.text)
+print()
+print("Legs:")
+print("Quads:")
+for line in w_quads:
+    print(line.text)
+print("Hamstrings:")
+for line in w_hamstrings:
+    print(line.text)
+print()
+print("Arms:")
+print("Biceps:")
+for line in w_biceps:
+    print(line)
+print("Triceps:")
+for line in w_triceps:
+    print(line)
+print("Forearms:")
+for line in w_forearms:
+    print(line)
