@@ -3,8 +3,10 @@ import requests
 from bs4 import BeautifulSoup
 from openai import OpenAI
 import os
+from dotenv import load_dotenv, find_dotenv
 
-os.environ['OPENAI_API_KEY'] = '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'
+load_dotenv()
+os.getenv("OPENAI_API_KEY")
 
 def getRandom(src, n):
     dst = []
@@ -105,7 +107,7 @@ response = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
-        {"role":"user", "content":"Generate a 4-day workout plan hitting every muscle group using the following exercise lists: {chest} {back} {legs} {arms}. Make sure to include the number of sets and reps for each workout"}
+        {"role":"user", "content":"Generate a 4-day workout plan hitting every muscle group using the following exercise lists: {chest} {back} {legs} {arms}. Make sure to include at least 5 workouts per day as well as the number of sets and reps for each workout"}
     ]
 )
 
