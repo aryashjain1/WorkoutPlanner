@@ -6,7 +6,6 @@ import os
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv()
-os.getenv("OPENAI_API_KEY")
 
 def getRandom(src, n):
     dst = []
