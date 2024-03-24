@@ -1,6 +1,10 @@
 import random
 import requests
 from bs4 import BeautifulSoup
+from openai import OpenAI
+import os
+
+os.environ['OPENAI_API_KEY'] = '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'
 
 def getRandom(src, n):
     dst = []
@@ -16,11 +20,8 @@ def getRandom(src, n):
 
 def printAllExercises(part):
     for line in part:
-        print(line.text)
-
-def printAllArmExercises(part):
-    for line in part:
         print(line)
+
 
 
 # Making a GET request 
@@ -31,8 +32,9 @@ soup = BeautifulSoup(r.content, 'html.parser')
 
 c = soup.find('div', class_ = 'article-body-content article-body standard-body-content css-yqyv4u ewisyje7')
 
-chest = c.find_all('h2')
-chest = chest[5:-2] #removing irrelevant titles
+chest_or = c.find_all('h2')
+chest_or = chest_or[5:-2] #removing irrelevant titles
+chest = [line.text for line in chest_or]
 
 print("All chest workouts:")
 printAllExercises(chest)
@@ -44,8 +46,9 @@ soup = BeautifulSoup(r.content, 'html.parser')
 
 l = soup.find('div', class_ = 'article-body-content article-body standard-body-content css-yqyv4u ewisyje7')
 
-legs = l.find_all('h2')
-legs = legs[4:]
+legs_or = l.find_all('h2')
+legs_or = legs_or[4:]
+legs = [line.text for line in legs_or]
 
 print("All leg workouts:")
 printAllExercises(legs)
@@ -57,8 +60,9 @@ soup = BeautifulSoup(r.content, 'html.parser')
 
 b = soup.find('div', class_ = 'article-body-content article-body standard-body-content css-yqyv4u ewisyje7')
 
-back = b.find_all('h2')
-back = back[9:-6]
+back_or = b.find_all('h2')
+back_or = back_or[9:-6]
+back = [line.text for line in back_or]
 
 print("All back workouts:")
 printAllExercises(back)
@@ -84,62 +88,25 @@ forearms = arms[24:26]
 print("All arms workouts: ")
 print()
 print("Biceps:")
-printAllArmExercises(biceps)
+printAllExercises(biceps)
 print()
 
 print("Triceps:")
-printAllArmExercises(triceps)
+printAllExercises(triceps)
 print()
 
 print("Forearms:")
-printAllArmExercises(forearms)
+printAllExercises(forearms)
 print()
 
-num_chest = 1
-num_chest_upper = 2
-num_back = 4
-num_quads = 3
-num_hamstrings = 3
-num_biceps = 2
-num_triceps = 2
-num_forearms = 1
+client = OpenAI()
 
-w_chest = getRandom(chest, num_chest)
-w_upper_chest = getRandom(chest, num_chest_upper)
-w_back = getRandom(back, num_back)
-w_quads = getRandom(legs, num_quads)
-w_hamstrings = getRandom(legs, num_hamstrings)
-w_biceps= getRandom(biceps, num_biceps)
-w_triceps = getRandom(triceps, num_triceps)
-w_forearms = getRandom(forearms, num_forearms)
+response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role":"user", "content":"Generate a 4-day workout plan hitting every muscle group using the following exercise lists: {chest} {back} {legs} {arms}. Make sure to include the number of sets and reps for each workout"}
+    ]
+)
 
-print("Workout split for the week: ")
-print("Chest: ")
-for line in w_chest:
-    print(line.text)
-print("Upper Chest:")
-for line in w_upper_chest:
-    print(line.text)
-print()
-print("Back:")
-for line in w_back:
-    print(line.text)
-print()
-print("Legs:")
-print("Quads:")
-for line in w_quads:
-    print(line.text)
-print("Hamstrings:")
-for line in w_hamstrings:
-    print(line.text)
-print()
-print("Arms:")
-print("Biceps:")
-for line in w_biceps:
-    print(line)
-print("Triceps:")
-for line in w_triceps:
-    print(line)
-print("Forearms:")
-for line in w_forearms:
-    print(line)
+print(response.choices[0].message.content)
