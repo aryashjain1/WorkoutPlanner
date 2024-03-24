@@ -4,20 +4,7 @@ from bs4 import BeautifulSoup
 from openai import OpenAI
 import os
 from dotenv import load_dotenv, find_dotenv
-
 load_dotenv()
-
-def getRandom(src, n):
-    dst = []
-    visited = set()
-    i = 0
-    while i < n:
-        curr = random.choice(src)
-        if curr not in visited:
-            visited.add(curr)
-            dst.append(curr)
-            i += 1
-    return dst
 
 def printAllExercises(part):
     for line in part:
