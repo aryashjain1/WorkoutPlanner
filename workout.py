@@ -3,8 +3,8 @@ import requests
 from bs4 import BeautifulSoup
 from openai import OpenAI
 import os
-from dotenv import load_dotenv, find_dotenv
-load_dotenv()
+#from dotenv import load_dotenv, find_dotenv
+#load_dotenv()
 
 def printAllExercises(part):
     for line in part:
